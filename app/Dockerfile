@@ -10,6 +10,7 @@ ARG SERVER_PORT
 ENV SERVER_PORT=$SERVER_PORT
 
 WORKDIR /app
+ENV PYTHONPATH=/app
 
 COPY ./requirements.txt /app/
 
@@ -17,5 +18,5 @@ RUN pip install -r requirements.txt
 
 COPY . /app/
 
-CMD gunicorn --timeout 120 -w 4 -b 0.0.0.0:5000 wsgi:app
+CMD gunicorn --chdir /app --timeout 120 -w 4 -b 0.0.0.0:5000 wsgi:app
 
