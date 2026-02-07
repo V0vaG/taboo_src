@@ -9,13 +9,13 @@ ENV B_NUM=$B_NUM
 ARG SERVER_PORT
 ENV SERVER_PORT=$SERVER_PORT
 
-WORKDIR ~/
+WORKDIR /app
 
-COPY ./requirements.txt .
+COPY ./requirements.txt /app/
 
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY . /app/
 
-CMD gunicorn --timeout 120 -w 4 -b 0.0.0.0:5000 app:app
+CMD gunicorn --timeout 120 -w 4 -b 0.0.0.0:5000 wsgi:app
 
