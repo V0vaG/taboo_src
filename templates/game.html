@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="status-grid">
+    <div class="status">
+      <span class="label">Red</span>
+      <strong>{{ scores.red }}</strong>
+    </div>
+    <div class="status">
+      <span class="label">Blue</span>
+      <strong>{{ scores.blue }}</strong>
+    </div>
+    <div class="status">
+      <span class="label">Time</span>
+      <strong id="timer">{{ time_limit }}</strong>
+    </div>
+    <div class="status">
+      <span class="label">Passes</span>
+      <strong>{{ passes }}</strong>
+    </div>
+    <div class="status">
+      <span class="label">Turn</span>
+      <strong>
+        {{ current_player.name }}
+        <span class="team-badge team-{{ current_player.team }}">{{ current_player.team }}</span>
+      </strong>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Device access</h2>
+    <p class="muted">
+      Each player should open the game URL and join with their name.
+    </p>
+    {% if not current_user %}
+      <p class="alert">This device is not linked to a player yet.</p>
+    {% else %}
+      <p class="muted">
+        Linked as {{ current_user.name }}
+        <span class="team-badge team-{{ current_user.team }}">{{ current_user.team }}</span>
+      </p>
+    {% endif %}
+  </section>
+
+  <section class="card focus-card">
+    {% if card and can_view %}
+      <h2 class="word">{{ card.word }}</h2>
+      <p class="subtitle">Taboo words</p>
+      <ul class="taboo-list">
+        {% for word in card.taboo %}
+          <li>{{ word }}</li>
+        {% endfor %}
+      </ul>
+    {% elif card %}
+      <p class="muted">Card hidden for your team. Pass the screen.</p>
+    {% else %}
+      <p>No cards left. Start a new round.</p>
+    {% endif %}
+  </section>
+
+  <section class="actions">
+    <form class="action-buttons" method="post" action="{{ url_for('action') }}">
+      <button
+        class="primary"
+        type="submit"
+        name="action"
+        value="correct"
+        {% if not current_user or current_user.id != current_player.id %}disabled{% endif %}
+      >
+        Correct
+      </button>
+      <button
+        class="danger"
+        type="submit"
+        name="action"
+        value="taboo"
+        {% if not current_user or current_user.id != current_player.id %}disabled{% endif %}
+      >
+        Taboo
+      </button>
+      <button
+        class="ghost"
+        type="submit"
+        name="action"
+        value="pass"
+        {% if not current_user or current_user.id != current_player.id %}disabled{% endif %}
+      >
+        Pass
+      </button>
+    </form>
+    <form method="post" action="{{ url_for('reset') }}">
+      <button class="link" type="submit">End round</button>
+    </form>
+    <form method="post" action="{{ url_for('next_turn') }}">
+      <button
+        class="ghost"
+        type="submit"
+        {% if not current_user or current_user.id != current_player.id %}disabled{% endif %}
+      >
+        Next turn
+      </button>
+    </form>
+  </section>
+
+  <section id="round-over" class="card hidden">
+    <h2>Time is up!</h2>
+    <p>Finish the round and start a new one.</p>
+    <form method="post" action="{{ url_for('reset') }}">
+      <button class="primary" type="submit">Back to start</button>
+    </form>
+  </section>
+
+  <script>
+    const timerEl = document.getElementById("timer");
+    const roundOverEl = document.getElementById("round-over");
+    const actionButtons = document.querySelectorAll(".action-buttons button");
+    let remaining = Number(timerEl?.textContent || 0);
+
+    const tick = () => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        remaining = 0;
+        timerEl.textContent = "0";
+        actionButtons.forEach((btn) => (btn.disabled = true));
+        roundOverEl.classList.remove("hidden");
+        return;
+      }
+      timerEl.textContent = String(remaining);
+      window.setTimeout(tick, 1000);
+    };
+
+    if (remaining > 0) {
+      window.setTimeout(tick, 1000);
+    }
+  </script>
+{% endblock %}

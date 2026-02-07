@@ -1,0 +1,42 @@
+[
+  {
+    "word": "Beach",
+    "taboo": ["sand", "ocean", "sun", "vacation", "waves"]
+  },
+  {
+    "word": "Pizza",
+    "taboo": ["cheese", "slice", "pepperoni", "delivery", "crust"]
+  },
+  {
+    "word": "Laptop",
+    "taboo": ["computer", "keyboard", "screen", "charger", "work"]
+  },
+  {
+    "word": "Bicycle",
+    "taboo": ["bike", "pedal", "helmet", "ride", "wheel"]
+  },
+  {
+    "word": "Doctor",
+    "taboo": ["hospital", "nurse", "patient", "medicine", "clinic"]
+  },
+  {
+    "word": "Coffee",
+    "taboo": ["cafe", "espresso", "latte", "bean", "mug"]
+  },
+  {
+    "word": "Airport",
+    "taboo": ["plane", "flight", "terminal", "gate", "luggage"]
+  },
+  {
+    "word": "Garden",
+    "taboo": ["flowers", "plants", "water", "soil", "yard"]
+  },
+  {
+    "word": "Museum",
+    "taboo": ["art", "exhibit", "gallery", "history", "ticket"]
+  },
+  {
+    "word": "Concert",
+    "taboo": ["music", "band", "stage", "tickets", "crowd"]
+  }
+]

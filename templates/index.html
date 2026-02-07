@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="card">
+    <h2>Players</h2>
+    {% if error %}
+      <p class="alert">{{ error }}</p>
+    {% endif %}
+    {% if players %}
+      <ul class="player-list">
+        {% for player in players %}
+          <li>
+            <span class="name">{{ player.name }}</span>
+            <span class="team-badge team-{{ player.team }}">{{ player.team }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      {% if started %}
+        <p class="muted">Round in progress. End round to add players.</p>
+      {% endif %}
+    {% else %}
+      <p class="muted">Add players to start the game.</p>
+    {% endif %}
+
+    {% if current_user %}
+      <p class="muted">
+        This phone is linked as {{ current_user.name }}
+        <span class="team-badge team-{{ current_user.team }}">{{ current_user.team }}</span>
+      </p>
+    {% endif %}
+
+    <form class="stack" method="post" action="{{ url_for('join') }}">
+      <label class="field">
+        <span>Player name</span>
+        <input type="text" name="name" placeholder="Enter name" required />
+      </label>
+      <label class="field">
+        <span>Team</span>
+        <select name="team" required>
+          <option value="" disabled selected>Choose team</option>
+          <option value="red">Red</option>
+          <option value="blue">Blue</option>
+        </select>
+      </label>
+      <button class="primary" type="submit" {% if started %}disabled{% endif %}>
+        Join game
+      </button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Start a round</h2>
+    <form class="stack" method="post" action="{{ url_for('start_game') }}">
+      <label class="field">
+        <span>Round length (seconds)</span>
+        <input
+          type="number"
+          name="time_limit"
+          min="30"
+          max="180"
+          value="{{ time_limit }}"
+          required
+        />
+      </label>
+      <button class="primary" type="submit" {% if not can_start or started %}disabled{% endif %}>
+        Start game
+      </button>
+      {% if started %}
+        <p class="muted">Round already started.</p>
+      {% elif not can_start %}
+        <p class="muted">Need at least 2 players, with one on each team.</p>
+      {% endif %}
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>How to play</h2>
+    <ul class="rules">
+      <li>One player describes the word to their team.</li>
+      <li>You cannot say any of the taboo words listed.</li>
+      <li>Tap "Correct" for a point, "Taboo" to subtract one.</li>
+      <li>Use "Pass" to skip and move the card to the back.</li>
+    </ul>
+  </section>
+{% endblock %}
