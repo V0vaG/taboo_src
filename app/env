@@ -1,0 +1,6 @@
+VOLUMES="['/home/$USER/script_files/${proejct}:/root/script_files/${proejct}']"
+VERSION='0.0.0'
+SERVER_PORT='89'
+# B_NUM='1'
+ARGS="--build-arg VERSION=$VERSION --build-arg B_NUM=$B_NUM --build-arg SERVER_PORT=$SERVER_PORT"
+COMMAND='gunicorn -w 4 -b 0.0.0.0:5000 wsgi:app'
