@@ -1,6 +1,6 @@
 VOLUMES="['/home/$USER/script_files/${proejct}:/root/script_files/${proejct}']"
-VERSION='0.0.5'
+VERSION='0.0.6'
 SERVER_PORT='88'
 # B_NUM='1'
 ARGS="--build-arg VERSION=$VERSION --build-arg B_NUM=$B_NUM --build-arg SERVER_PORT=$SERVER_PORT"
-COMMAND='gunicorn --chdir /app -w 4 -b 0.0.0.0:5000 wsgi:app'
+COMMAND='gunicorn --config /app/gunicorn.conf.py'
